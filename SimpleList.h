@@ -210,8 +210,48 @@ public:
         _internalArray = newArray;
     }
 
-    inline iterator begin() { return _internalArray; }
-    inline iterator end() { return _internalArray + _endPosition; }
+    inline iterator begin() const { return _internalArray; }
+    inline iterator end() const { return _internalArray + _endPosition; }
+
+    void sort(bool (*comp)(T, T))
+    {
+      T* ar = _internalArray;
+      uint8_t n = _endPosition;
+      uint8_t i, j, gap, swapped = 1;
+      T temp;
+
+      gap = n;
+      while (gap > 1 || swapped == 1)
+      {
+        gap = gap * 10 / 13;
+        if (gap == 9 || gap == 10) gap = 11;
+        if (gap < 1) gap = 1;
+        swapped = 0;
+        for (i = 0, j = gap; j < n; i++, j++)
+        {
+          if (comp(ar[i], ar[j]))
+          {
+            temp = ar[i];
+            ar[i] = ar[j];
+            ar[j] = temp;
+            swapped = 1;
+          }
+        }
+      }
+    }
+    
+    T at(int position)
+    {
+        return _internalArray[position];
+    }
+    
+    int indexOf(T item)
+    {
+        for (int i = 0; i < _endPosition; ++i)
+            if(_internalArray[i] == item)
+                return i;
+        return -1;
+    }
 
     inline bool empty() { return (_endPosition == 0); }
     inline unsigned int size() { return _endPosition; }
